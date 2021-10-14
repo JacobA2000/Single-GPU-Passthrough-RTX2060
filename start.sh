@@ -1,41 +1,30 @@
-# debug
+#!/bin/bash
 set -x
-
-# stop dm
+ 
+# load variables
+source "/etc/libvirt/hooks/kvm.conf"
+ 
+ 
+# Stop display manager
 systemctl stop sddm.service
-
-# unbind vt
-echo 0 > /sys/class/vtconsole/vtcon0/bind
-echo 0 > /sys/class/vtconsole/vtcon1/bind
-
-# unbind efi buffer
+# rc-service xdm stop
+ 
+# Unbind EFI Framebuffer
 echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
-
-# avoid race condition
+ 
 sleep 5
-
-# unload nvidia
-modprobe -r nvidia_drm
-modprobe -r nvidia_modeset
-modprobe -r drm_kms_helper
-modprobe -r nvidia
-modprobe -r i2c_nvidia_gpu
-modprobe -r drm
-# modprobe -r nvidia_uvm
-
-# unload psmouse
-modprobe -r psmouse
-
-# load psmouse with proto imps
-modprobe psmouse proto=imps
-
+ 
+# Unload NVIDIA kernel modules
+modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia
+ 
+ 
+# Detach GPU devices from host
+# Use your GPU and HDMI Audio PCI host device
 # unbind gpu
 virsh nodedev-detach pci_0000_01_00_0
 virsh nodedev-detach pci_0000_01_00_1
 virsh nodedev-detach pci_0000_01_00_2
 virsh nodedev-detach pci_0000_01_00_3
-
-# load vfio
-modprobe vfio
-modprobe vfio_pci
-modprobe vfio_iommu_type1
+ 
+# Load vfio module
+modprobe vfio-pci
