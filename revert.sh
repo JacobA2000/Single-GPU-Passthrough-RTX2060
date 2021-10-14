@@ -21,6 +21,11 @@ modprobe nvidia_drm
 modprobe nvidia_modeset
 modprobe nvidia_uvm
 modprobe nvidia
- 
+
+# unload psmouse
+modprobe -r psmouse
+# Reload psmouse
+modprobe psmouse
+
 # Restart Display Manager
 systemctl start sddm.service

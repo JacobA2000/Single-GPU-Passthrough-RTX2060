@@ -17,6 +17,10 @@ sleep 5
 # Unload NVIDIA kernel modules
 modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia
  
+ # unload psmouse
+modprobe -r psmouse
+# load psmouse with proto imps
+modprobe psmouse proto=imps
  
 # Detach GPU devices from host
 # Use your GPU and HDMI Audio PCI host device
