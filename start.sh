@@ -4,10 +4,8 @@ set -x
 # load variables
 source "/etc/libvirt/hooks/kvm.conf"
  
- 
 # Stop display manager
 systemctl stop sddm.service
-# rc-service xdm stop
  
 # Unbind EFI Framebuffer
 echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
